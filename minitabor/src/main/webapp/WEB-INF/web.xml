@@ -11,4 +11,13 @@
     <servlet-name>CompetitionServlet</servlet-name>
     <url-pattern>/competition/*</url-pattern>
   </servlet-mapping>
+  
+  <servlet>
+    <servlet-name>ExportServlet</servlet-name>
+    <servlet-class>org.hashcode.minitabor.servlet.ExportServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>ExportServlet</servlet-name>
+    <url-pattern>/export/*</url-pattern>
+  </servlet-mapping>
 </web-app>

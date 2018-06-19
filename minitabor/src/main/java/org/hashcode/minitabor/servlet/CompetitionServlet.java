@@ -23,7 +23,7 @@ public class CompetitionServlet extends HttpServlet {
 	 */
 	private static final long serialVersionUID = -1975550687450260105L;
 	private static final Logger LOG = Logger.getLogger(CompetitionServlet.class);
-	private static final int MAX_COUNT = 25;
+	private static final int MAX_COUNT = 30;
 	private static final Date BORN_END = new GregorianCalendar(2003, 7, 13).getTime();
 
 	@Override

@@ -1,6 +1,8 @@
 package org.hashcode.minitabor.service;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -20,6 +22,7 @@ import com.google.appengine.api.datastore.Query;
 import com.google.appengine.api.datastore.Query.Filter;
 import com.google.appengine.api.datastore.Query.FilterOperator;
 import com.google.appengine.api.datastore.Query.FilterPredicate;
+import com.google.appengine.api.datastore.Query.SortDirection;
 
 /**
  * Služba pro práci s přihláškami
@@ -48,6 +51,17 @@ public class CompetitionService {
 			result.setError("Chybně vyplněný formulář");
 		}
 		return null;
+	}
+
+	public static String toCsv(List<Competition> competitions) {
+		StringBuilder sb = new StringBuilder();
+		if (competitions != null)
+			for (Competition comp : competitions) {
+				sb.append(comp.getUniqueId() + ";" + comp.getFirstName() + ";" + comp.getLastName() + ";"
+						+ comp.getEmail() + ";" + comp.getStreet() + ";" + comp.getCity() + ";" + comp.getZip() + ";"
+						+ Util.formatDate(comp.getBorn()) + ";" + comp.getMobile() + ";" + comp.getTroubles() + "\n");
+			}
+		return sb.toString();
 	}
 
 	/**
@@ -129,5 +143,29 @@ public class CompetitionService {
 				return uuid1.equals(uuid2);
 		}
 		return false;
+	}
+
+	public static List<Competition> find() {
+		List<Competition> result = new ArrayList<>();
+
+		DatastoreService datastore = DatastoreServiceFactory.getDatastoreService();
+		Query q = new Query("Competition").addSort("created", SortDirection.ASCENDING);
+		PreparedQuery pq = datastore.prepare(q);
+
+		for (Entity comp : pq.asIterable()) {
+			Competition c = new Competition();
+			c.setFirstName((String) comp.getProperty("firstName"));
+			c.setLastName((String) comp.getProperty("lastName"));
+			c.setEmail((String) comp.getProperty("email"));
+			c.setBorn((Date) comp.getProperty("born"));
+			c.setCity((String) comp.getProperty("city"));
+			c.setMobile((String) comp.getProperty("mobile"));
+			c.setStreet((String) comp.getProperty("street"));
+			c.setTroubles((String) comp.getProperty("troubles"));
+			c.setZip((String) comp.getProperty("zip"));
+			result.add(c);
+		}
+
+		return result;
 	}
 }
